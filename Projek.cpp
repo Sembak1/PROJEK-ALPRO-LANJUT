@@ -48,7 +48,6 @@ void cari(){
     }
 }
 
-
 void menu() {
     cout << "|===========================|" << endl;
     cout << "|    Manajemen Keuangan     |" << endl;
@@ -56,10 +55,9 @@ void menu() {
     cout << "| 1. Masukkan Transaksi     |" << endl;
     cout << "| 2. Lihat Transaksi        |" << endl;
     cout << "| 3. Lihat Saldo            |" << endl;
-    cout << "| 4. Search (Linear)        |" << endl;
-    cout << "| 5. Search (Binary)        |" << endl;
-    cout << "| 6. Urutkan Data           |" << endl;
-    cout << "| 7. Keluar                 |" << endl;
+    cout << "| 4. Search                 |" << endl;
+    cout << "| 5. Sort                   |" << endl;
+    cout << "| 6. Keluar                 |" << endl;
     cout << "|===========================|" << endl;
 }
 
@@ -173,6 +171,107 @@ void caribinary() {
     }
 }
 
+void seacrhgabung (){
+    cout << "Pilih Opsi Seacrh" << endl;
+    cout << "1. Search Binary Rekursif " << endl;
+    cout << "2. Search Linear          " << endl;
+    cout << "Pilih opsi: ";
+    int pilihan;
+    cin >> pilihan;
+    system("cls");
+    if (pilihan == 1) {
+        caribinary();
+    } else if (pilihan == 2) {
+        cari();
+    } else {
+        cout << "Pilihan tidak ada." << endl;
+    }
+}
+
+void merge(Menejemen arr[], int left, int mid, int right) {
+    int n1 = mid - left + 1;
+    int n2 = right - mid;
+
+    Menejemen L[n1], R[n2];
+
+    for (int i = 0; i < n1; i++)
+        L[i] = arr[left + i];
+    for (int j = 0; j < n2; j++)
+        R[j] = arr[mid + 1 + j];
+
+    int i = 0, j = 0, k = left;
+
+    while (i < n1 && j < n2) {
+        if (L[i].tanggal <= R[j].tanggal) {
+            arr[k] = L[i];
+            i++;
+        } else {
+            arr[k] = R[j];
+            j++;
+        }
+        k++;
+    }
+
+    while (i < n1) {
+        arr[k] = L[i];
+        i++;
+        k++;
+    }
+
+    while (j < n2) {
+        arr[k] = R[j];
+        j++;
+        k++;
+    }
+}
+
+void mergeSort(Menejemen arr[], int left, int right) {
+    if (left < right) {
+        int mid = left + (right - left) / 2;
+
+        mergeSort(arr, left, mid);
+        mergeSort(arr, mid + 1, right);
+
+        merge(arr, left, mid, right);
+    }
+}
+
+void sortmerge() {
+    if (jumlahmasuk == 0) {
+        cout << "Tidak ada data untuk diurutkan." << endl;
+        return;
+    }
+
+    mergeSort(keuangan, 0, jumlahmasuk - 1);
+
+    cout << "|==================================|" << endl;
+    cout << "|      Data Setelah Diurutkan      |" << endl;
+    cout << "|==================================|" << endl;
+    for (int i = 0; i < jumlahmasuk; i++) {
+        cout << "Tanggal: " << keuangan[i].tanggal << endl;
+        cout << "Jenis: " << keuangan[i].jenis << endl;
+        cout << "Jumlah: " << keuangan[i].jumlah << endl;
+    }
+}
+
+void Sortgabung (){
+    cout << "Pilih Opsi Sort" << endl;
+    cout << "1. Sort Selection " << endl;
+    cout << "2. Sort Merge          " << endl;
+    cout << "Pilih opsi: ";
+    int pilihan;
+    cin >> pilihan;
+    system("cls");
+    if (pilihan == 1) {
+        urutkandata();
+    } else if (pilihan == 2) {
+        sortmerge();
+    } else {
+        cout << "Pilihan tidak ada." << endl;
+    }
+}
+
+
 int main() {
     int pilihan;
     do {
@@ -198,28 +297,23 @@ int main() {
                 system("cls");
                 break;
             case 4:
-                cari();
+                seacrhgabung();
                 system("pause");
                 system("cls");
                 break;
             case 5:
-                caribinary();
+                Sortgabung();
                 system("pause");
                 system("cls");
                 break;
             case 6:
-                urutkandata();
-                system("pause");
-                system("cls");
-                break;
-            case 7:
                 cout << "Terima kasih!" << endl;
                 break;
             default:
                 cout << "Pilihan tidak valid." << endl;
                 break;
         }
-    } while (pilihan != 7);
+    } while (pilihan != 6);
 
     return 0;
 }
