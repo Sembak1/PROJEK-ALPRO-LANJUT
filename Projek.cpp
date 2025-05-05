@@ -65,10 +65,12 @@ void lihat(){
     cout << "|===========================|" << endl;
     cout << "|        Data Keuangan      | " << endl;
     cout << "|===========================|" << endl;
+
+    Menejemen* ptr = keuangan;
     for (int i = 0; i < jumlahmasuk; i++) {
-        cout << "Tanggal: " << keuangan[i].tanggal << endl;
-        cout << "Jenis: " << keuangan[i].jenis << endl;
-        cout << "Jumlah: " << keuangan[i].jumlah << endl;
+        cout << "Tanggal: " << (ptr + 1)->tanggal << endl;
+        cout << "Jenis: " << (ptr + 1)->jenis << endl;
+        cout << "Jumlah: " << (ptr + 1)->jumlah << endl;
     cout << "============================" << endl;
     }
 }
@@ -79,11 +81,13 @@ void saldo() {
     }
 
     long long saldo = 0;
+    Menejemen* ptr = keuangan;
+
     for (int i = 0; i < jumlahmasuk; i++) {
-        if (keuangan[i].jenis == "Pemasukan") {
-            saldo += keuangan[i].jumlah;
+        if ((ptr + i)->jenis == "Pemasukan") {
+            saldo += (ptr + i)->jumlah;
         } else {
-            saldo -= keuangan[i].jumlah;
+            saldo -= (ptr + i)->jumlah;
         }
     }
 
