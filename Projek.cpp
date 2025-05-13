@@ -1,4 +1,6 @@
 #include <iostream>
+#include <string>
+#include <fstream>
 
 using namespace std;
 
@@ -7,73 +9,94 @@ struct Menejemen {
     string jenis;
     long long jumlah;
 };
-Menejemen keuangan[100];
+Menejemen keuangan[1000];
 int jumlahmasuk = 0;
 
+void simpanfile() {
+    ofstream file("data.txt");  
+    if (!file) {  
+        return;  
+    }
+
+    for (int i = 0; i < jumlahmasuk; i++) {
+        file << keuangan[i].tanggal << ",";
+        file << keuangan[i].jenis << ",";
+        file << keuangan[i].jumlah << endl;
+    }
+    file.close();
+}
+
+void bacafile() {
+    ifstream file("data.txt");
+    if (!file) {
+        return;
+    }
+
+    jumlahmasuk = 0;
+    string line;
+    while (getline(file, line)) {
+        size_t pos1 = line.find(',');
+        size_t pos2 = line.rfind(',');
+
+        if (pos1 == string::npos || pos2 == string::npos || pos1 == pos2) continue;
+
+        keuangan[jumlahmasuk].tanggal = line.substr(0, pos1);
+        keuangan[jumlahmasuk].jenis = line.substr(pos1 + 1, pos2 - pos1 - 1);
+        keuangan[jumlahmasuk].jumlah = stoll(line.substr(pos2 + 1));
+
+        jumlahmasuk++;
+        if (jumlahmasuk >= 1000) break;
+    }
+
+    file.close();
+}
+
 void masuk(){
+    int pilihan;
+    bacafile();
+    Menejemen* ptr = &keuangan[jumlahmasuk];
     cout << "|========================================|" << endl;
     cout << "|             Masukan Transaksi          |" << endl;
     cout << "|========================================|" << endl;
-    cout << "Masukkan tanggal (DD/MM/YYYY): ";
-    cin >> keuangan[jumlahmasuk].tanggal;
-    cout << "Masukkan jenis (Pemasukan/Pengeluaran): ";
-    cin >> keuangan[jumlahmasuk].jenis;
+    cout << "Masukkan tanggal : ";
+    cin >> ptr->tanggal;
+    cout << "Pilih jenis transaksi: " << endl;
+    cout << "1. Pemasukan" << endl;
+    cout << "2. Pengeluaran" << endl;
+    cout << "Pilihan Anda: ";
+    cin >> pilihan;
+    
+    if (pilihan == 1) {
+        ptr->jenis = "Pemasukan";
+    } else if (pilihan == 2) {
+        ptr->jenis = "Pengeluaran";
+    } else {
+        cout << "Pilihan tidak valid. Transaksi dibatalkan" << endl;
+        return;}
     cout << "Masukkan jumlah: ";
-    cin >> keuangan[jumlahmasuk].jumlah;
+    cin >> ptr->jumlah;
+    if (ptr->jumlah < 0) {
+    cout << "Jumlah tidak boleh negatif. Transaksi dibatalkan" << endl;
+    return;}
     jumlahmasuk++;
-}
-
-void cari(){
-    string cari;
-    cout << "|===============================|" << endl;
-    cout << "|            Search             |" << endl;
-    cout << "|===============================|" << endl;
-    cout << "Masukkan tanggal (DD/MM/YYYY): ";
-    cin >> cari;
-    system("cls");
-    bool ditemukan = false;
-    for (int i = 0; i < jumlahmasuk; i++) {
-        if (keuangan[i].tanggal == cari) {
-            cout << "|=======================|" << endl;
-            cout << "|     Data Keuangan     |" << endl;
-            cout << "|=======================|" << endl;
-            cout << "Tanggal: " << keuangan[i].tanggal << endl;
-            cout << "Jenis: " << keuangan[i].jenis << endl;
-            cout << "Jumlah: " << keuangan[i].jumlah << endl;
-            ditemukan = true;
-        }
-    }
-    if (!ditemukan) {
-        cout << "Data dengan tanggal " << cari << " tidak ditemukan." << endl;
-    }
-}
-
-void menu() {
-    cout << "|===========================|" << endl;
-    cout << "|    Manajemen Keuangan     |" << endl;
-    cout << "|===========================|" << endl;
-    cout << "| 1. Masukkan Transaksi     |" << endl;
-    cout << "| 2. Lihat Transaksi        |" << endl;
-    cout << "| 3. Lihat Saldo            |" << endl;
-    cout << "| 4. Search                 |" << endl;
-    cout << "| 5. Sort                   |" << endl;
-    cout << "| 6. Keluar                 |" << endl;
-    cout << "|===========================|" << endl;
+    simpanfile(); 
 }
 
 void lihat(){
+    bacafile();
     cout << "|===========================|" << endl;
     cout << "|        Data Keuangan      | " << endl;
     cout << "|===========================|" << endl;
-
     Menejemen* ptr = keuangan;
     for (int i = 0; i < jumlahmasuk; i++) {
-        cout << "Tanggal: " << (ptr + 1)->tanggal << endl;
-        cout << "Jenis: " << (ptr + 1)->jenis << endl;
-        cout << "Jumlah: " << (ptr + 1)->jumlah << endl;
+        cout << "Tanggal: " << (ptr + i)->tanggal << endl;
+        cout << "Jenis: " << (ptr + i)->jenis << endl;
+        cout << "Jumlah: " << (ptr + i)->jumlah << endl;
     cout << "============================" << endl;
     }
 }
+
+
 void saldo() {
     if (jumlahmasuk == 0) {
         cout << "Belum ada transaksi yang tercatat." << endl;
@@ -82,7 +105,6 @@ void saldo() {
 
     long long saldo = 0;
     Menejemen* ptr = keuangan;
-
     for (int i = 0; i < jumlahmasuk; i++) {
         if ((ptr + i)->jenis == "Pemasukan") {
             saldo += (ptr + i)->jumlah;
@@ -96,12 +118,97 @@ void saldo() {
     cout << "|=======================|" << endl;
     cout << "Saldo Anda: Rp " << saldo << endl;
 }
-void sortkeuangan() {
-    if (jumlahmasuk == 0) {
-        cout << "Tidak ada data untuk diurutkan." << endl;
-        return;
-    }
 
+void cari(){
+    string cari;
+    cout << "|===============================|" << endl;
+    cout << "|            Search             |" << endl;
+    cout << "|===============================|" << endl;
+    cout << "Masukkan tanggal : ";
+    cin >> cari;
+    system("cls");
+
+    bool ditemukan = false;
+    Menejemen* ptr = keuangan;
+    for (int i = 0; i < jumlahmasuk; i++) {
+        if ((ptr + i)->tanggal == cari) {
+            cout << "|=======================|" << endl;
+            cout << "|     Data Keuangan     |" << endl;
+            cout << "|=======================|" << endl;
+            cout << "Tanggal: " << (ptr + i)->tanggal << endl;
+            cout << "Jenis: " << (ptr + i)->jenis << endl;
+            cout << "Jumlah: " << (ptr + i)->jumlah << endl;
+            ditemukan = true;
+        }
+    }
+    if (!ditemukan) {
+        cout << "Data dengan tanggal " << cari << " tidak ditemukan." << endl;
+    }
+}
+
+void update(){
+    cout << "|===========================|" << endl;
+    cout << "|        Update Data        |" << endl;
+    cout << "|===========================|" << endl;
+    cout << "Masukkan tanggal : ";
+    string tanggal;
+    cin >> tanggal;
+    Menejemen* ptr = keuangan;
+    for (int i = 0; i < jumlahmasuk; i++) {
+        if ((ptr + i)->tanggal == tanggal) {
+            int pilihan;
+            cout << "Pilih jenis baru:" << endl;
+            cout << "1. Pemasukan" << endl;
+            cout << "2. Pengeluaran" << endl;
+            cout << "Pilihan Anda: ";
+            cin >> pilihan;
+
+            if (pilihan == 1) {
+                (ptr + i)->jenis = "Pemasukan";
+            } else if (pilihan == 2) {
+                (ptr + i)->jenis = "Pengeluaran";
+            } else {
+                cout << "Pilihan tidak valid. Update dibatalkan." << endl;
+                return;
+            }
+
+            cout << "Masukkan jumlah baru: ";
+            cin >> (ptr + i)->jumlah;
+            if ((ptr + i)->jumlah < 0) {
+                cout << "Jumlah tidak boleh negatif. Update dibatalkan." << endl;
+                return;
+            }
+
+            simpanfile();
+            cout << "Data berhasil diperbarui." << endl;
+            return;
+        }
+    }
+    cout << "Data dengan tanggal " << tanggal << " tidak ditemukan." << endl;
+}
+
+void hapus(){
+    cout << "|===========================|" << endl;
+    cout << "|        Hapus Data         |" << endl;
+    cout << "|===========================|" << endl;
+    cout << "Masukkan tanggal : ";
+    string tanggal;
+    cin >> tanggal;
+
+    for (int i = 0; i < jumlahmasuk; i++) {
+        if (keuangan[i].tanggal == tanggal) {
+            for (int j = i; j < jumlahmasuk - 1; j++) {
+                keuangan[j] = keuangan[j + 1];
+            }
+            jumlahmasuk--;
+            simpanfile();
+            return;
+        }
+    }
+    cout << "Data dengan tanggal " << tanggal << " tidak ditemukan." << endl;
+}
+
+void sortkeuangan() {
     for (int i = 0; i < jumlahmasuk - 1; i++) {
         int minIndex = i;
         for (int j = i + 1; j < jumlahmasuk; j++) {
@@ -112,7 +219,6 @@ void sortkeuangan() {
         swap(keuangan[i], keuangan[minIndex]);
     }
 }
-
 
 void urutkandata() {
     sortkeuangan();
@@ -128,21 +234,14 @@ void urutkandata() {
 }
 
 int searchrekursif(int left, int right, string target) {
-    if (left > right) {
-        return -1;
-    }
-    
+    if (left > right) { return -1;}
     int mid = left + (right - left) / 2;
-    
     if (keuangan[mid].tanggal == target) {
-        return mid;
-    }
+        return mid;}
     else if (keuangan[mid].tanggal > target) {
-        return searchrekursif(left, mid - 1, target);
-    }
+        return searchrekursif(left, mid - 1, target);}
     else {
-        return searchrekursif(mid + 1, right, target);
-    }
+        return searchrekursif(mid + 1, right, target);}
 }
 
 void caribinary() {
@@ -150,12 +249,11 @@ void caribinary() {
         cout << "Tidak ada data keuangan untuk dicari." << endl;
         return;
     }
-
     string cari;
     cout << "|=========================|" << endl;
     cout << "|  Search Binary Rekursif |" << endl;
     cout << "|=========================|" << endl;
-    cout << "Masukkan tanggal (DD/MM/YYYY): ";
+    cout << "Masukkan tanggal : ";
     cin >> cari;
 
     sortkeuangan();
@@ -197,36 +295,16 @@ void merge(Menejemen arr[], int left, int mid, int right) {
     int n2 = right - mid;
 
     Menejemen L[n1], R[n2];
-
-    for (int i = 0; i < n1; i++)
-        L[i] = arr[left + i];
-    for (int j = 0; j < n2; j++)
-        R[j] = arr[mid + 1 + j];
+    for (int i = 0; i < n1; i++) L[i] = arr[left + i];
+    for (int j = 0; j < n2; j++) R[j] = arr[mid + 1 + j];
 
     int i = 0, j = 0, k = left;
-
     while (i < n1 && j < n2) {
-        if (L[i].tanggal <= R[j].tanggal) {
-            arr[k] = L[i];
-            i++;
-        } else {
-            arr[k] = R[j];
-            j++;
-        }
-        k++;
+        if (L[i].tanggal <= R[j].tanggal) arr[k++] = L[i++];
+        else arr[k++] = R[j++];
     }
-
-    while (i < n1) {
-        arr[k] = L[i];
-        i++;
-        k++;
-    }
-
-    while (j < n2) {
-        arr[k] = R[j];
-        j++;
-        k++;
-    }
+    while (i < n1) arr[k++] = L[i++];
+    while (j < n2) arr[k++] = R[j++];
 }
 
 void mergeSort(Menejemen arr[], int left, int right) {
@@ -275,6 +353,20 @@ void Sortgabung (){
     }
 }
 
+void menu() {
+    cout << "|===========================|" << endl;
+    cout << "|    Manajemen Keuangan     |" << endl;
+    cout << "|===========================|" << endl;
+    cout << "| 1. Masukkan Transaksi     |" << endl;
+    cout << "| 2. Lihat Transaksi        |" << endl;
+    cout << "| 3. Lihat Saldo            |" << endl;
+    cout << "| 4. Search                 |" << endl;
+    cout << "| 5. Sort                   |" << endl;
+    cout << "| 6. Update Transaksi       |" << endl;
+    cout << "| 7. Hapus Transaksi        |" << endl;
+    cout << "| 8. Keluar                 |" << endl;
+    cout << "|===========================|" << endl;
+}
 
 int main() {
     int pilihan;
@@ -311,13 +403,23 @@ int main() {
                 system("cls");
                 break;
             case 6:
+                update();
+                system("pause");
+                system("cls");
+                break;
+            case 7:
+                hapus();
+                system("pause");
+                system("cls");
+                break;
+            case 8:
                 cout << "Terima kasih!" << endl;
                 break;
             default:
                 cout << "Pilihan tidak valid." << endl;
                 break;
         }
-    } while (pilihan != 6);
+    } while (pilihan != 8);
 
     return 0;
 }
