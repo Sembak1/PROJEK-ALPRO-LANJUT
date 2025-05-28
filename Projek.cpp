@@ -17,7 +17,6 @@ void simpanfile() {
     if (!file) {  
         return;  
     }
-
     for (int i = 0; i < jumlahmasuk; i++) {
         file << keuangan[i].tanggal << ",";
         file << keuangan[i].jenis << ",";
@@ -144,47 +143,6 @@ void cari(){
     if (!ditemukan) {
         cout << "Data dengan tanggal " << cari << " tidak ditemukan." << endl;
     }
-}
-
-void update(){
-    cout << "|===========================|" << endl;
-    cout << "|        Update Data        |" << endl;
-    cout << "|===========================|" << endl;
-    cout << "Masukkan tanggal : ";
-    string tanggal;
-    cin >> tanggal;
-    Menejemen* ptr = keuangan;
-    for (int i = 0; i < jumlahmasuk; i++) {
-        if ((ptr + i)->tanggal == tanggal) {
-            int pilihan;
-            cout << "Pilih jenis baru:" << endl;
-            cout << "1. Pemasukan" << endl;
-            cout << "2. Pengeluaran" << endl;
-            cout << "Pilihan Anda: ";
-            cin >> pilihan;
-
-            if (pilihan == 1) {
-                (ptr + i)->jenis = "Pemasukan";
-            } else if (pilihan == 2) {
-                (ptr + i)->jenis = "Pengeluaran";
-            } else {
-                cout << "Pilihan tidak valid. Update dibatalkan." << endl;
-                return;
-            }
-
-            cout << "Masukkan jumlah baru: ";
-            cin >> (ptr + i)->jumlah;
-            if ((ptr + i)->jumlah < 0) {
-                cout << "Jumlah tidak boleh negatif. Update dibatalkan." << endl;
-                return;
-            }
-
-            simpanfile();
-            cout << "Data berhasil diperbarui." << endl;
-            return;
-        }
-    }
-    cout << "Data dengan tanggal " << tanggal << " tidak ditemukan." << endl;
 }
 
 void hapus(){
@@ -362,9 +320,8 @@ void menu() {
     cout << "| 3. Lihat Saldo            |" << endl;
     cout << "| 4. Mencari Transaksi      |" << endl;
     cout << "| 5. Urutkan Transaksi      |" << endl;
-    cout << "| 6. Update Transaksi       |" << endl;
-    cout << "| 7. Hapus Transaksi        |" << endl;
-    cout << "| 8. Keluar                 |" << endl;
+    cout << "| 6. Hapus Transaksi        |" << endl;
+    cout << "| 7. Keluar                 |" << endl;
     cout << "|===========================|" << endl;
 }
 
@@ -402,24 +359,20 @@ int main() {
                 system("pause");
                 system("cls");
                 break;
+          
             case 6:
-                update();
-                system("pause");
-                system("cls");
-                break;
-            case 7:
                 hapus();
                 system("pause");
                 system("cls");
                 break;
-            case 8:
+            case 7:
                 cout << "Terima kasih!" << endl;
                 break;
             default:
                 cout << "Pilihan tidak valid." << endl;
                 break;
         }
-    } while (pilihan != 8);
+    } while (pilihan != 7);
 
     return 0;
 }
