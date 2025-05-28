@@ -360,8 +360,8 @@ void menu() {
     cout << "| 1. Masukkan Transaksi     |" << endl;
     cout << "| 2. Lihat Transaksi        |" << endl;
     cout << "| 3. Lihat Saldo            |" << endl;
-    cout << "| 4. Search                 |" << endl;
-    cout << "| 5. Sort                   |" << endl;
+    cout << "| 4. Mencari Transaksi      |" << endl;
+    cout << "| 5. Urutkan Transaksi      |" << endl;
     cout << "| 6. Update Transaksi       |" << endl;
     cout << "| 7. Hapus Transaksi        |" << endl;
     cout << "| 8. Keluar                 |" << endl;
