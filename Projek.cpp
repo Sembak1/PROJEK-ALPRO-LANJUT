@@ -57,7 +57,7 @@ void masuk(){
     cout << "|========================================|" << endl;
     cout << "|             Masukan Transaksi          |" << endl;
     cout << "|========================================|" << endl;
-    cout << "Masukkan tanggal : ";
+    cout << "Masukkan tanggal (dd-mm-yyyy) : ";
     cin >> ptr->tanggal;
     cout << "Pilih jenis transaksi: " << endl;
     cout << "1. Pemasukan" << endl;
@@ -88,7 +88,7 @@ void lihat(){
     cout << "|===========================|" << endl;
     Menejemen* ptr = keuangan;
     for (int i = 0; i < jumlahmasuk; i++) {
-        cout << "Tanggal: " << (ptr + i)->tanggal << endl;
+        cout << "Tanggal : " << (ptr + i)->tanggal << endl;
         cout << "Jenis: " << (ptr + i)->jenis << endl;
         cout << "Jumlah: " << (ptr + i)->jumlah << endl;
     cout << "============================" << endl;
@@ -123,7 +123,7 @@ void cari(){
     cout << "|===============================|" << endl;
     cout << "|            Search             |" << endl;
     cout << "|===============================|" << endl;
-    cout << "Masukkan tanggal : ";
+    cout << "Masukkan tanggal (dd-mm-yyyy) : ";
     cin >> cari;
     system("cls");
 
@@ -149,7 +149,7 @@ void hapus(){
     cout << "|===========================|" << endl;
     cout << "|        Hapus Data         |" << endl;
     cout << "|===========================|" << endl;
-    cout << "Masukkan tanggal : ";
+    cout << "Masukkan tanggal (dd-mm-yyyy) : ";
     string tanggal;
     cin >> tanggal;
 
@@ -160,9 +160,11 @@ void hapus(){
             }
             jumlahmasuk--;
             simpanfile();
+            cout << "Data dengan tanggal " << tanggal << " berhasil dihapus." << endl;
             return;
         }
     }
+
     cout << "Data dengan tanggal " << tanggal << " tidak ditemukan." << endl;
 }
 
@@ -211,7 +213,7 @@ void caribinary() {
     cout << "|=========================|" << endl;
     cout << "|  Search Binary Rekursif |" << endl;
     cout << "|=========================|" << endl;
-    cout << "Masukkan tanggal : ";
+    cout << "Masukkan tanggal (dd-mm-yyyy): ";
     cin >> cari;
 
     sortkeuangan();
