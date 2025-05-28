@@ -233,7 +233,7 @@ void caribinary() {
     }
 }
 
-void seacrhgabung (){
+void searchgabung (){
     cout << "Pilih Opsi Seacrh" << endl;
     cout << "1. Search Binary Rekursif " << endl;
     cout << "2. Search Linear          " << endl;
@@ -267,12 +267,12 @@ void merge(Menejemen arr[], int left, int mid, int right) {
     while (j < n2) arr[k++] = R[j++];
 }
 
-void mergeSort(Menejemen arr[], int left, int right) {
+void mergesort(Menejemen arr[], int left, int right) {
     if (left < right) {
         int mid = left + (right - left) / 2;
 
-        mergeSort(arr, left, mid);
-        mergeSort(arr, mid + 1, right);
+        mergesort(arr, left, mid);
+        mergesort(arr, mid + 1, right);
 
         merge(arr, left, mid, right);
     }
@@ -284,7 +284,7 @@ void sortmerge() {
         return;
     }
 
-    mergeSort(keuangan, 0, jumlahmasuk - 1);
+    mergesort(keuangan, 0, jumlahmasuk - 1);
 
     cout << "|==================================|" << endl;
     cout << "|      Data Setelah Diurutkan      |" << endl;
@@ -296,7 +296,7 @@ void sortmerge() {
     }
 }
 
-void Sortgabung (){
+void sortgabung (){
     cout << "Pilih Opsi Sort" << endl;
     cout << "1. Sort Selection " << endl;
     cout << "2. Sort Merge          " << endl;
@@ -328,6 +328,7 @@ void menu() {
 }
 
 int main() {
+    bacafile();   
     int pilihan;
     do {
         menu();
@@ -352,12 +353,12 @@ int main() {
                 system("cls");
                 break;
             case 4:
-                seacrhgabung();
+                searchgabung();
                 system("pause");
                 system("cls");
                 break;
             case 5:
-                Sortgabung();
+                sortgabung();
                 system("pause");
                 system("cls");
                 break;
