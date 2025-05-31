@@ -81,17 +81,22 @@ void masuk(){
     simpanfile(); 
 }
 
-void lihat(){
+void lihat() {
     bacafile();
+    if (jumlahmasuk == 0) {
+        cout << "Belum ada transaksi yang tercatat." << endl;
+        return;
+    }
+
     cout << "|===========================|" << endl;
-    cout << "|        Data Keuangan      | " << endl;
+    cout << "|        Data Keuangan     |" << endl;
     cout << "|===========================|" << endl;
     Menejemen* ptr = keuangan;
     for (int i = 0; i < jumlahmasuk; i++) {
         cout << "Tanggal : " << (ptr + i)->tanggal << endl;
-        cout << "Jenis: " << (ptr + i)->jenis << endl;
-        cout << "Jumlah: " << (ptr + i)->jumlah << endl;
-    cout << "============================" << endl;
+        cout << "Jenis   : " << (ptr + i)->jenis << endl;
+        cout << "Jumlah  : " << (ptr + i)->jumlah << endl;
+        cout << "============================" << endl;
     }
 }
 
@@ -118,7 +123,12 @@ void saldo() {
     cout << "Saldo Anda: Rp " << saldo << endl;
 }
 
-void cari(){
+void cari() {
+    if (jumlahmasuk == 0) {
+        cout << "Belum ada data untuk dicari." << endl;
+        return;
+    }
+
     string cari;
     cout << "|===============================|" << endl;
     cout << "|            Search             |" << endl;
@@ -145,7 +155,12 @@ void cari(){
     }
 }
 
-void hapus(){
+void hapus() {
+    if (jumlahmasuk == 0) {
+        cout << "Tidak ada data untuk dihapus." << endl;
+        return;
+    }
+
     cout << "|===========================|" << endl;
     cout << "|        Hapus Data         |" << endl;
     cout << "|===========================|" << endl;
@@ -167,7 +182,6 @@ void hapus(){
 
     cout << "Data dengan tanggal " << tanggal << " tidak ditemukan." << endl;
 }
-
 void sortkeuangan() {
     for (int i = 0; i < jumlahmasuk - 1; i++) {
         int minIndex = i;
@@ -181,18 +195,22 @@ void sortkeuangan() {
 }
 
 void urutkandata() {
+    if (jumlahmasuk == 0) {
+        cout << "Tidak ada data untuk diurutkan." << endl;
+        return;
+    }
+
     sortkeuangan();
     cout << "|================================|" << endl;
-    cout << "|     Data Setelah Diurutkan     | " << endl;
+    cout << "|     Data Setelah Diurutkan     |" << endl;
     cout << "|================================|" << endl;
     for (int i = 0; i < jumlahmasuk; i++) {
         cout << "Tanggal: " << keuangan[i].tanggal << endl;
         cout << "Jenis: " << keuangan[i].jenis << endl;
         cout << "Jumlah: " << keuangan[i].jumlah << endl;
-    cout << "==================================" << endl;
+        cout << "==================================" << endl;
     }
 }
-
 int searchrekursif(int left, int right, string target) {
     if (left > right) { return -1;}
     int mid = left + (right - left) / 2;
