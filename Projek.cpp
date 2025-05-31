@@ -182,6 +182,7 @@ void hapus() {
 
     cout << "Data dengan tanggal " << tanggal << " tidak ditemukan." << endl;
 }
+
 void sortkeuangan() {
     for (int i = 0; i < jumlahmasuk - 1; i++) {
         int minIndex = i;
